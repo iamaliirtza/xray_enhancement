@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X-ray Enhancement</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        h1 { color: #333; }
+        #xray-canvas { border: 1px solid #ccc; margin-top: 20px; }
+        #enhanced-image { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>X-ray Image Enhancement</h1>
+    <form id="upload-form">
+        <input type="file" id="xray-upload" accept="image/*">
+        <button type="button" onclick="enhanceXray()">Enhance</button>
+    </form>
+    <img id="enhanced-image" src="" alt="Enhanced Image" style="display: none;"/>
+
+    <script>
+        function enhanceXray() {
+            const fileInput = document.getElementById('xray-upload');
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/enhance', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const img = document.getElementById('enhanced-image');
+                img.src = url;
+                img.style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
